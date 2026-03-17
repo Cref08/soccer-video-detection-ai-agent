@@ -1,24 +1,24 @@
-from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
+from collections import OrderedDict, defaultdict
+from typing import List, Tuple, Optional, Dict
+from sklearn.cluster import KMeans
+from pydantic import BaseModel
 from ultralytics import YOLO
 from numpy import ndarray
-from pydantic import BaseModel
-from typing import List, Tuple, Optional, Dict
-import numpy as np
-import cv2
-from sklearn.cluster import KMeans
-import torch
-import torch.nn as nn
+from pathlib import Path
+from PIL import Image
+
 import torch.nn.functional as F
+import torch.nn as nn
+import numpy as np
+import torch
 import yaml
 import gc
 import os
 import sys
-from collections import OrderedDict, defaultdict
-from PIL import Image
-import torchvision.transforms as T
+import cv2
 
-# ── Grass / kit helpers  ────────────────────────────────
+# ── Grass / kit helpers  ──────────────────────────────────────────────────────
 
 def get_grass_color(img: np.ndarray) -> Tuple[int, int, int]:
     if img is None or img.size == 0:
@@ -61,7 +61,7 @@ def get_kits_colors(players, grass_hsv=None, frame=None):
     return kits_colors
 
 
-# ── OSNet team classification (turbo_7 style)  ────────────────
+# ── OSNet team classification  ────────────────
 
 TEAM_1_ID = 6
 TEAM_2_ID = 7
@@ -942,9 +942,7 @@ class TVFrameResult(BaseModel):
     keypoints: List[Tuple[float, float]]  # [(x, y), ...] float coordinates
 
 
-# ── Miner ─────────────────────────────────────────────────────────────────────
-
-class Miner:
+class AiAgent:
     def __init__(self, path_hf_repo: Path) -> None:
         self.path_hf_repo = path_hf_repo
         self.is_start = False
