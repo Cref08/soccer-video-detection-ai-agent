@@ -1,92 +1,58 @@
-# 🚀 Example Chute for Turbovision 🪂
+# ⚽ Soccer Video Detection AI Agent
 
-This repository demonstrates how to deploy a **Chute** via the **Turbovision CLI**, hosted on **Hugging Face Hub**.
-It serves as a minimal example showcasing the required structure and workflow for integrating machine learning models, preprocessing, and orchestration into a reproducible Chute environment.
+An AI agent for analyzing soccer videos: player detection, team classification, and pitch keypoint detection. Built with YOLO for object detection, OSNet for team re-identification, and HRNet for field keypoint detection.
 
-## Repository Structure 
-The following two files **must be present** (in their current locations) for a successful deployment — their content can be modified as needed:
+## Sample Output
+
+<video src="https://github.com/user-attachments/assets/3f62c419-7172-4691-989d-af077f304bbf" controls width="640"></video>
+
+## Features
+
+- **Player detection** — YOLO-based detection of players on the pitch
+- **Team classification** — OSNet embeddings + K-means clustering to assign players to Team 1 or Team 2
+- **Pitch keypoint detection** — HRNet detects field markers for homography and field normalization
+- **Kit color analysis** — Grass-aware color extraction as fallback for team differentiation
+
+## Repository Structure
 
 | File | Purpose |
-|------|----------|
-| `miner.py` | Defines the ML model type(s), orchestration, and all pre/postprocessing logic. |
-| `config.yml` | Specifies machine configuration (e.g., GPU type, memory, environment variables). |
+|------|---------|
+| `ai_agent.py` | Main AI agent: model orchestration, preprocessing, and prediction logic |
+| `test.py` | Test script to run detection on videos and visualize results |
+| `player_detect.pt` | YOLO weights for player detection |
+| `keypoint_detect.pt` | HRNet weights for pitch keypoint detection |
+| `osnet_model.pth.tar-100` | OSNet weights for team re-identification |
+| `hrnetv2_w48.yaml` | HRNet architecture configuration |
 
-Other files — e.g., model weights, utility scripts, or dependencies — are **optional** and can be included as needed for your model. Note: Any required assets must be defined or contained **within this repo**, which is fully open-source, since all network-related operations (downloading challenge data, weights, etc.) are disabled **inside the Chute** 
+## Models
 
-## Overview
+### 1. YOLO (`player_detect.pt`)
 
-Below is a high-level diagram showing the interaction between Huggingface, Chutes and Turbovision:
+**Purpose:** Object detection — locates players (and optionally ball, referees) in each video frame.
 
-![](../images/miner.png)
+**Role in the agent:** Runs first on every frame. Outputs bounding boxes with class IDs and confidence scores. Player boxes (class ID 2) are passed to OSNet for team assignment. Also assigns track IDs for temporal consistency across frames.
 
-## Local Testing
-After editing the `config.yml` and `miner.py` and saving it into your Huggingface Repo, you will want to test it works locally. 
+### 2. OSNet (`osnet_model.pth.tar-100`)
 
-1. Copy the file `scorevision/chute_tmeplate/turbovision_chute.py.j2` as a python file called `my_chute.py` and fill in the missing variables:
-```python
-HF_REPO_NAME = "{{ huggingface_repository_name }}"
-HF_REPO_REVISION = "{{ huggingface_repository_revision }}"
-CHUTES_USERNAME = "{{ chute_username }}"
-CHUTE_NAME = "{{ chute_name }}"
-```
+**Purpose:** Person re-identification — produces embedding vectors from cropped upper-body images.
 
-2. Run the following command to build the chute locally (Caution: there are known issues with the docker location when running this on a mac) 
+**Role in the agent:** Takes player crops from YOLO boxes and extracts 512‑dim embeddings. Embeddings are aggregated per track, then clustered with K-means (2 clusters) to assign each player to Team 1 or Team 2. Uses kit/jersey appearance to distinguish teams. If OSNet weights are missing, the agent falls back to HSV-based kit color analysis.
+
+### 3. HRNet (`keypoint_detect.pt` + `hrnetv2_w48.yaml`)
+
+**Purpose:** Pitch keypoint detection — detects 32 field markers (lines, corners, markings) in each frame.
+
+**Role in the agent:** Outputs heatmaps for field keypoints. These are mapped to a standard pitch template and refined via homography. Used for field normalization and warping (e.g., bird’s-eye view), not for player body pose.
+
+## Quick Start
+
+1. Install dependencies (PyTorch, Ultralytics, OpenCV, etc.)
+2. Run the test script on a video:
+
 ```bash
-chutes build my_chute:chute --local --public
+python test.py --video path/to/soccer_video.mp4 --output-dir ./output --save-video
 ```
 
-3. Run the name of the docker image just built (i.e. `CHUTE_NAME`) and enter it
-```bash
-docker run -p 8000:8000 -e CHUTES_EXECUTION_CONTEXT=REMOTE -it <image-name> /bin/bash
-```
+## Contact
 
-4. Run the file from within the container
-```bash
-chutes run my_chute:chute --dev --debug
-```
-
-5. In another terminal, test the local endpoints to ensure there are no bugs
-```bash
-curl -X POST http://localhost:8000/health -d '{}'
-curl -X POST http://localhost:8000/predict -d '{"url": "https://scoredata.me/2025_03_14/35ae7a/h1_0f2ca0.mp4","meta": {}}'
-```
-
-## Live Testing
-1. If you have any chute with the same name (ie from a previous deployment), ensure you delete that first (or you will get an error when trying to build).
-```bash
-chutes chutes list
-```
-Take note of the chute id that you wish to delete (if any)
-```bash
-chutes chutes delete <chute-id>
-```
-
-You should also delete its associated image 
-```bash
-chutes images list
-```
-Take note of the chute image id
-```bash
-chutes images delete <chute-image-id>
-```
-
-2. Use Turbovision's CLI to build, deploy and commit on-chain (Note: you can skip the on-chain commit using `--no-commit`.  You can also specify a past huggingface revision to point to using `--revision` and/or the local files you want to upload to your huggingface repo using `--model-path`)
-```bash
-sv -vv push
-```
-
-3. When completed, warm up the chute (if its cold 🧊). (You can confirm its status using `chutes chutes list` or `chutes chutes get <chute-id>` if you already know its id). Note: Warming up can sometimes take a while but if the chute runs without errors (should be if you've tested locally first) and there are sufficient nodes (i.e. machines) available matching the `config.yml` you specified, the chute should become hot 🔥!
-```bash
-chutes warmup <chute-id>
-```
-
-4. Test the chute's endpoints
-```bash
-curl -X POST https://<YOUR-CHUTE-SLUG>.chutes.ai/health -d '{}' -H "Authorization: Bearer $CHUTES_API_KEY"
-curl -X POST https://<YOUR-CHUTE-SLUG>.chutes.ai/predict -d '{"url": "https://scoredata.me/2025_03_14/35ae7a/h1_0f2ca0.mp4","meta": {}}' -H "Authorization: Bearer $CHUTES_API_KEY"
-```
-
-5. Test what your chute would get on a validator (this also applies any validation/integrity checks which may fail if you did not use the Turbovision CLI above to deploy the chute)
-```bash
-sv -vv run-once
-```
+Reach out via Telegram: [t.me/whisdev](https://t.me/whisdev)
